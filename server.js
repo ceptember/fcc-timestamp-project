@@ -25,8 +25,51 @@ app.get("/api/hello", function (req, res) {
 });
 
 
+// DO THE THING HERE
+app.get("/api/timestamp/:date", function (req, res) {
+  
+  
+  //FIX SO IT WORKS WITH DATES LIKE 1-1-2000
+  
+  let urlDate = req.params.date;
+  let dateInt = 0;
+  let dateToUse = new Date()
+  
+  let regex = /\D/ 
+  
+  // if it contains something that's not a number (i.e., the thing is not a Unix timestamp)
+  if (regex.test(urlDate) ){
+    dateToUse = new Date(urlDate)
+  }
+  
+  // if date is unix timestamp 
+   else {
+    dateInt = parseInt(urlDate);
+    dateToUse = new Date(dateInt)
+  
+   }
+  
+  
+  
+    res.json(
+      {unix: dateToUse.getTime(),
+       utc: dateToUse.toUTCString()})       
+  });
+
+
+// if no date entered 
+app.get("/api/timestamp", function (req,res){
+
+      let newDate = new Date()
+      res.json(
+        {unix: newDate.getTime(),
+        utc: newDate.toUTCString()})
+});
+
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
